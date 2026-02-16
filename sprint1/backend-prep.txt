@@ -1,0 +1,79 @@
+STEP 1
+
+I am responsible for Choosing the backend stack and initialize project, 
+Creating base server and one test route, Writing setup guide for backend.
+
+STEP 2
+
+Choose backend such like node.js
+Install the backend
+check the installation
+initialize the project
+
+STEP 3
+
+Research the options for backend.
+Decide on the node 
+initialize project. 
+create base server
+create a simple route to test
+write the instructions to installaling and to get it running.
+
+STEP 4
+Node Version mismatch with teammates. 
+Server error(s)
+Installation problems?
+
+Need from teammates
+Database schema
+
+Step1
+
+Choose backend stack and initialize project
+
+Create base server and one test route
+
+Write setup guide for one backend 
+
+Step 2
+
+Choose Backend Stack such as node.js, etc
+Install said backend 
+Initialize Backend Project
+Create Project Structure
+Update
+
+Step 3
+
+1. Research backend options
+
+2. Decide on Node
+
+3. Initialize npm project
+
+4. Install dependencies
+
+5.Create folder structure
+
+6.Push initial setup commit
+
+Done When
+
+Backend folder exists
+Dependencies installed
+Project runs without errors
+Code pushed to gilbertoDev branch
+
+
+Step 4
+
+Node version mismatch between teammates
+
+Unclear Requirements
+
+Need from team
+List of endpoints frontend expects
+
+Database schema from database developer
+
+Agreement on response structure
