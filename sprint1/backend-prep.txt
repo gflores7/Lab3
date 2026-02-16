@@ -1,3 +1,31 @@
+STEP 1
+
+I am responsible for Choosing the backend stack and initialize project, 
+Creating base server and one test route, Writing setup guide for backend.
+
+STEP 2
+
+Choose backend such like node.js
+Install the backend
+check the installation
+initialize the project
+
+STEP 3
+
+Research the options for backend.
+Decide on the node 
+initialize project. 
+create base server
+create a simple route to test
+write the instructions to installaling and to get it running.
+
+STEP 4
+Node Version mismatch with teammates. 
+Server error(s)
+Installation problems?
+
+Need from teammates
+Database schema
 
 Step1
 
