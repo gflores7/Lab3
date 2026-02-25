@@ -49,3 +49,10 @@ List of endpoints frontend expects
 Database schema from database developer
 
 Agreement on response structure
+
+
+Backend Stack: Node.js with Express
+Server runs locally on port 3000
+Start command: node server.js
+Dependencies installed: express
+Test route: /test
