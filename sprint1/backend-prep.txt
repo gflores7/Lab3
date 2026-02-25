@@ -5,19 +5,19 @@ Creating base server and one test route, Writing setup guide for backend.
 
 STEP 2
 
-Choose backend such like node.js
-Install the backend
-check the installation
-initialize the project
+Using Node.js
+Install the backend (node -v)
+check the installation (npm -v)
+initialize the project (npm init -y)
 
 STEP 3
 
 Research the options for backend.
 Decide on the node 
 initialize project. 
-create base server
-create a simple route to test
-write the instructions to installaling and to get it running.
+create base server file (server.js)
+create a simple route to test 
+write the instructions to installaling and to get it running. 
 
 STEP 4
 Node Version mismatch with teammates. 
