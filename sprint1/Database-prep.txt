@@ -1,0 +1,12 @@
+Trello cards owned:
+Write core queries for feature 1
+Create tables and insert test data
+Convert ERD to Schema
+
+Will work from an ERD to a Schema, mainly through ERDPLUS.com.
+Will need MySQL and Workbench to work with database.
+
+I expect to build my cards as I progress through this project. I expect to work with lots of query heavy files and also files withing my workbench. What "done" looks to me is a database that runs and functions properly, allowing us to pull data in and out.
+
+I do not foresee anything getting in my way as of now, but I am sure I'll run into issues down the line.
+What I'd like from my teammates is good communication and teamwork.
