@@ -1,0 +1,46 @@
+PROBLEM STATEMENT
+
+Users dont have a way to connect with other users in the system. 
+Adding friends allows the users to send and recive friend requests so they can build a list of friends
+
+USER FLOW
+
+1. User opens the application
+2. User enters ID of the user they are trying to add as a friend. 
+3. User sends a friend request.
+4. Request saved is saved in the database.
+5. The other user can accept the friend request.
+6. Once accepted both users appear in each others friend list.
+
+TECHNICAL PLAN
+
+FRONTEND CHANGES
+ 
+Create a form to enter a friend ID
+Create a button to send friend request
+Create a page or section to view friend list
+Display friend list from backend data
+
+BACKEND ROUTES
+friends/request - Send friend request
+friends/accept - Accept friend request
+friends/deny - Deny friend request
+friends/list/userid - gets friends list
+
+DATABASE CHANGES
+create a friends table
+stores user IDs and friend IDs
+store request status of friend request
+
+
+FILES EXPECTED TO BE CREATE / MODIFIED
+server.js
+package.json
+
+ACCEPTANCE CRITERIA 
+
+User can send friend request
+Friend request is saved in database
+User can accept friend request
+Friend list shows correct users
+Backend routes work without errors
