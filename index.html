@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Convoy Demo</title>
+</head>
+<body>
+
+<h1>Convoy Demo</h1>
+
+<h2>Login</h2>
+<input type="text" id="loginUser" placeholder="Username"><br><br>
+<input type="password" id="loginPass" placeholder="Password"><br><br>
+<button onclick="login()">Login</button>
+<p id="loginResult"></p>
+
+<h2>Create Convoy</h2>
+<input type="number" id="createUserID" placeholder="User ID"><br><br>
+<input type="text" id="convoyName" placeholder="Convoy Name"><br><br>
+<input type="text" id="createJoinCode" placeholder="Join Code"><br><br>
+<button onclick="createConvoy()">Create Convoy</button>
+<p id="createResult"></p>
+
+<h2>Join Convoy</h2>
+<input type="number" id="joinUserID" placeholder="User ID"><br><br>
+<input type="text" id="joinCode" placeholder="Join Code"><br><br>
+<button onclick="joinConvoy()">Join Convoy</button>
+<p id="joinResult"></p>
+
+<h2>View Members</h2>
+<input type="number" id="convoyID" placeholder="Convoy ID"><br><br>
+<button onclick="loadMembers()">Load Members</button>
+<ul id="membersList"></ul>
+
+<script>
+async function login() {
+  const userName = document.getElementById('loginUser').value;
+  const password = document.getElementById('loginPass').value;
+
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userName, password })
+  });
+
+  const text = await res.text();
+  document.getElementById('loginResult').textContent = text;
+}
+
+async function createConvoy() {
+  const userID = document.getElementById('createUserID').value;
+  const name = document.getElementById('convoyName').value;
+  const joinCode = document.getElementById('createJoinCode').value;
+
+  const res = await fetch('/create-convoy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userID, name, joinCode })
+  });
+
+  const text = await res.text();
+  document.getElementById('createResult').textContent = text;
+}
+
+async function joinConvoy() {
+  const userID = document.getElementById('joinUserID').value;
+  const joinCode = document.getElementById('joinCode').value;
+
+  const res = await fetch('/join-convoy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userID, joinCode })
+  });
+
+  const text = await res.text();
+  document.getElementById('joinResult').textContent = text;
+}
+
+async function loadMembers() {
+  const convoyID = document.getElementById('convoyID').value;
+
+  const res = await fetch('/convoy-members/' + convoyID);
+  const data = await res.json();
+
+  const list = document.getElementById('membersList');
+  list.innerHTML = '';
+
+  for (let i = 0; i < data.length; i++) {
+    const li = document.createElement('li');
+    li.textContent = data[i].userName + ' - ' + data[i].role;
+    list.appendChild(li);
+  }
+}
+</script>
+
+</body>
+</html>
