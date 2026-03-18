@@ -1,0 +1,22 @@
+Create/Join Convoy Feature
+
+This feature will allow users to create or join a convoy. Each convoy will have a unique ID and password so that other users will join by invite only. 
+
+***MAYBE***
+The host will be able to manage users within the convoy, such as removing them. 
+
+Other users will be able to invite their friends from within the convoy
+
+As a user I want to be able to create my own convoy and invite my friends to it. This will be visually seen on the frontend, backend to enforce the code, and store data within the database. An easy UI to quickly type in user information.
+
+This feature will allow users to join together and communicate.
+
+User will select create or join feature, create convoy name, set password, or join through password.
+
+Frontend will show you UI and be simple, backend will hold the code behind the scene, database will store information on convoys. 
+
+API will add GPS and Communication.
+
+Database will stay mostly the same, may just add attributes to certain entities.
+
+Done to me looks like a working project that allows you create or join a convoy without any problem, this feature will add to the database and remove when it is over.
