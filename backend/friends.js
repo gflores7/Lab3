@@ -64,50 +64,74 @@ router.post('/request', (req, res) => {
 
 
 // SEND FRIEND REQUEST BY USERNAME
+// SEND FRIEND REQUEST BY USERNAME
 router.post('/request-by-username', (req, res) => {
   const { currentUserID, friendUsername } = req.body;
 
   if (!currentUserID || !friendUsername) {
     return res.status(400).send("Missing data");
   }
-
   const findSql = 'SELECT userID FROM users WHERE userName = ?';
-
   db.query(findSql, [friendUsername], (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).send("DB error");
     }
-
     if (results.length === 0) {
       return res.send("User not found");
     }
-
     const friendID = results[0].userID;
-
-    if (friendID === currentUserID) {
+    if (friendID === parseInt(currentUserID)) {
       return res.send("You cannot add yourself");
     }
-
-    const id = crypto.randomUUID();
-
-    const insertSql = `
-      INSERT INTO friendships (id, sender_id, receiver_id, status)
-      VALUES (?, ?, ?, 'pending')
+    // Check if a friendship record already exists
+    const checkSql = `
+      SELECT status FROM friendships
+      WHERE sender_id = ? AND receiver_id = ?
     `;
-
-    db.query(insertSql, [id, currentUserID, friendID], (err2) => {
+    db.query(checkSql, [currentUserID, friendID], (err2, existing) => {
       if (err2) {
         console.error(err2);
-
-        if (err2.code === 'ER_DUP_ENTRY') {
-          return res.send("Friend request already exists");
-        }
-
-        return res.status(500).send("Server error");
+        return res.status(500).send("DB error");
       }
+      if (existing.length > 0) {
+        const status = existing[0].status;
 
-      res.send("Friend request sent to " + friendUsername);
+        if (status === 'pending') {
+          return res.send("Friend request already sent");
+        } else if (status === 'accepted') {
+          return res.send("You are already friends");
+        } else if (status === 'rejected') {
+          // Update rejected request to pending so they can resend
+          const updateSql = `
+            UPDATE friendships
+            SET status = 'pending', created_at = CURRENT_TIMESTAMP
+            WHERE sender_id = ? AND receiver_id = ?
+          `;
+          db.query(updateSql, [currentUserID, friendID], (err3) => {
+            if (err3) {
+              console.error(err3);
+              return res.status(500).send("Server error");
+            }
+            return res.send("Friend request re-sent");
+          });
+          return;
+        }
+      } else {
+        // No previous record, insert new
+        const id = crypto.randomUUID();
+        const insertSql = `
+          INSERT INTO friendships (id, sender_id, receiver_id, status)
+          VALUES (?, ?, ?, 'pending')
+        `;
+        db.query(insertSql, [id, currentUserID, friendID], (err4) => {
+          if (err4) {
+            console.error(err4);
+            return res.status(500).send("Server error");
+          }
+          return res.send("Friend request sent to " + friendUsername);
+        });
+      }
     });
   });
 });
