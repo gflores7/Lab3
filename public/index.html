@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Messaging App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+
+    input, button {
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    #usersList button {
+      display: block;
+      width: 300px;
+      text-align: left;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    #messagesBox {
+      border: 1px solid #ccc;
+      min-height: 200px;
+      padding: 10px;
+      margin-top: 10px;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Messenger</h1>
+
+  <div class="section">
+    <h2>Register</h2>
+    <input type="text" id="regFirstName" placeholder="First name"><br>
+    <input type="text" id="regLastName" placeholder="Last name"><br>
+    <input type="text" id="regUsername" placeholder="Username"><br>
+    <input type="password" id="regPassword" placeholder="Password"><br>
+    <button onclick="registerUser()">Register</button>
+    <p id="registerStatus"></p>
+  </div>
+
+  <div class="section">
+    <h2>Login</h2>
+    <input type="text" id="loginUsername" placeholder="Username"><br>
+    <input type="password" id="loginPassword" placeholder="Password"><br>
+    <button onclick="loginUser()">Login</button>
+    <p id="loginStatus"></p>
+    <p id="currentUser"></p>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <h2>Users</h2>
+    <div id="usersList"></div>
+  </div>
+
+  <div class="section">
+    <h2 id="chatTitle">Messages</h2>
+    <div id="messagesBox"></div>
+    <br>
+    <input type="text" id="messageInput" placeholder="Type your message" style="width: 300px;">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

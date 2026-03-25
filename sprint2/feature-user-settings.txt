@@ -1,0 +1,67 @@
+1. Problem Statement 
+What problem does this solve? 
+
+Users currently cannot update their personal preferences or account display information after registration. This limits personalization and reduces user control over their account. 
+
+The Settings Page solves this by providing a centralized interface where users can view and update their account preferences. 
+
+2. User Flow 
+Step by step from start to finish 
+
+1.User logs into the application 
+2.User clicks “Settings” in the navigation bar 
+3.Settings page loads with current user data 
+4.User edits one or more fields: 
+    *Display Name 
+    *Bio 
+    *Privacy Setting (Public / Private) 
+    *Email Notifications (On / Off) 
+5.User clicks “Save Changes” 
+6.Backend validates input 
+7.Database updates the user record 
+8.Success message appears 
+9.Page refresh shows persisted updates 
+ 
+3.Technical Plan
+
+Frontend changes:
+Add a new UI page/component with a form and connect it to the backend using API calls.
+
+Backend routes:
+Create new route handlers to process requests, validate data, and return appropriate responses.
+
+Database changes:
+Update the database by adding necessary tables or fields to store feature-related data.
+
+Files expected to be created or modified:
+Create new frontend components and backend route files, and modify existing models or configuration files if needed.
+
+4.API Changes
+
+New routes:
+Introduce new API endpoints to handle feature-specific operations.
+
+Modified routes:
+Update existing endpoints if additional data handling or validation is required.
+
+Request and response structure:
+Define a JSON request body for incoming data and return structured JSON responses with success or error messages.
+
+5.Database Changes
+
+New tables:
+Create a new table to store feature-specific records.
+
+Schema updates:
+Modify the database schema to support relationships or new constraints.
+
+New fields:
+Add new columns to existing tables to store additional feature data.
+
+6.Acceptance Criteria
+
+Clear definition of done:
+The feature is complete when users can successfully use it without errors and all data persists correctly.
+
+Must be testable:
+The feature can be tested by submitting data, verifying database updates, and confirming correct UI behavior and error handling.
