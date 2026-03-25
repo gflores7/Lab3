@@ -19,6 +19,15 @@ body {
   color: white;
 }
 
+#top-right-image {
+  position: absolute;
+  top: 10px; /* Adjust this to move it down or up */
+  right: 10px; /* Adjust this to move it left or right */
+  width: 150px; /* Adjust the size of the image */
+  height: 150px; /* Keep the aspect ratio consistent */
+  border-radius: 50%; /* Keeps the rounded-circle effect */
+}
+
 /* Chat Container */
 .chat-container {
   width: 400px;

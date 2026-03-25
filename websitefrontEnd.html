@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
   <link rel="stylesheet" href="styles.css">
+  <title>Convoy Chat with GPS</title>
 </head>
 <body>
+<img src="Convoy.jpg" class="rounded-circle" alt="Cinque Terre" id="top-right-image">
 <h1 class="page-title">Convoy</h1>
 <div class="chat-container">
   <div class="chat-header">Group Chat</div>
@@ -14,33 +15,116 @@
   <div class="chat-input">
     <input type="text" id="messageInput" placeholder="Type a message..." />
     <button onclick="sendMessage()">Send</button>
+    <button onclick="shareLocation()">Share Location</button>
   </div>
 </div>
 
 <script>
-  function sendMessage() {
-    const input = document.getElementById("messageInput");
-    const messageText = input.value.trim();
+  const chatMessages = document.getElementById("chatMessages");
+  const input = document.getElementById("messageInput");
 
+  // Send text message
+  function sendMessage() {
+    const messageText = input.value.trim();
     if (messageText === "") return;
 
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message");
     messageDiv.textContent = messageText;
-
-    const chatMessages = document.getElementById("chatMessages");
     chatMessages.appendChild(messageDiv);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
     input.value = "";
   }
 
-  document.getElementById("messageInput")
-    .addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-        sendMessage();
+  // Send message on Enter
+  input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") sendMessage();
+  });
+
+  // Share GPS location
+  function shareLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+    } else {
+      addMessage("Geolocation is not supported by this browser.");
+    }
+  }
+
+  function locationSuccess(position) {
+    const lat = position.coords.latitude.toFixed(6);
+    const lon = position.coords.longitude.toFixed(6);
+
+  
+
+    const link = document.createElement("a");
+    link.href = `https://www.google.com/maps?q=${lat},${lon}`;
+    link.target = "_blank";
+    link.textContent = "View my location 📍🌎";
+
+     const coordsText = document.createTextNode(
+    ` (Lat: ${lat}, Lon: ${lon})`
+  );
+
+     const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.appendChild(link);
+    messageDiv.appendChild(coordsText);
+
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    saveLocationToServer(lat, lon);
+  }
+
+
+  function saveLocationToServer(lat, lon) {
+  // Send the location data to the back-end server
+  fetch('http://localhost:3000/location', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ latitude: lat, longitude: lon }), // Send location data
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Location saved to database!');
+      } else {
+        console.error('Error saving location:', data.message);
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
     });
+  }
+
+  function locationError(error) {
+    let msg;
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        msg = "User denied the request for Geolocation.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        msg = "Location information is unavailable.";
+        break;
+      case error.TIMEOUT:
+        msg = "The request to get user location timed out.";
+        break;
+      default:
+        msg = "An unknown error occurred.";
+    }
+    addMessage(msg);
+  }
+
+  // Helper to append message to chat
+  function addMessage(text) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
 </script>
 
 </body>
