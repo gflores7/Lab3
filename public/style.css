@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+input {
+  display: block;
+  width: 300px;
+  padding: 8px;
+  margin: 8px 0;
+}
+
+button {
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+#users div {
+  padding: 8px;
+  border: 1px solid #ccc;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+#messages {
+  border: 1px solid #ccc;
+  min-height: 200px;
+  padding: 10px;
+  margin: 10px 0;
+}
