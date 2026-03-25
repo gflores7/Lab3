@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h1 class="page-title">Convoy</h1>
+
+<button id="friendsBtn" onclick="getFriends()">Show Friends</button>
+
+<div class="chat-container">
+    <div id="friendsList"></div>
+  <div class="chat-header">Group Chat</div>
+
+  <div class="chat-messages" id="chatMessages"></div>
+
+  <div class="chat-input">
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<div id="addFriendContainer">
+    <h3>Add Friend</h3>
+    <input type="text" id="friendUsername" placeholder="Enter username" />
+    <button onclick="addFriend()">Add Friend</button>
+  </div>
+
+<div id="friendRequestsContainer">
+  <h3>Friend Requests</h3>
+  <button onclick="getFriendRequests()">Show Friend Requests</button>
+  <div id="friendRequestsList"></div>
+</div>
+
+<div>
+  <h3>Current User</h3>
+  <select id="currentUser">
+    <option value="1">User1</option>
+    <option value="2">User2</option>
+  </select>
+</div>
+
+<script>
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const messageText = input.value.trim();
+
+    if (messageText === "") return;
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.textContent = messageText;
+
+    const chatMessages = document.getElementById("chatMessages");
+    chatMessages.appendChild(messageDiv);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    input.value = "";
+  }
+
+  document.getElementById("messageInput")
+    .addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+// add friend feature
+function addFriend() {
+  const username = document.getElementById('friendUsername').value.trim();
+  const currentUserID = document.getElementById('currentUser').value;
+
+  if (!username) return alert("Enter a username"); 
+
+  fetch('http://localhost:3000/friends/request-by-username', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      currentUserID: currentUserID,
+      friendUsername: username
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data))
+  .catch(err => {
+    console.error(err);
+    alert("Error sending request");
+  });
+}
+
+//get friend list
+ let showingFriends = false;
+function getFriends() {
+  const container = document.getElementById('friendsList');
+  const button = document.getElementById('friendsBtn');
+
+  // Toggle friends list on and off
+  if (showingFriends) {
+    container.innerHTML = '';
+    showingFriends = false;
+    button.textContent = "Show Friends";
+    return;
+  }
+
+  const currentUserID = document.getElementById('currentUser').value;
+
+  fetch(`http://localhost:3000/friends/list/${currentUserID}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Friends:", data);
+      container.innerHTML = '<h3>Friends:</h3>';
+      if (data.length === 0) {
+        container.innerHTML += '<p>No friends found</p>';
+      } else {
+        data.forEach(friend => {
+          const p = document.createElement('p');
+          p.textContent = `ID: ${friend.userID} | Name: ${friend.userName}`;
+          container.appendChild(p);
+        });
+      }
+      showingFriends = true;
+      button.textContent = "Hide Friends";
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error getting friends");
+    });
+}
+
+// get incoming friend requests for the current user
+function getFriendRequests() {
+  const currentUserID = document.getElementById('currentUser').value;
+  const container = document.getElementById('friendRequestsList');
+
+  // Toggle hide if already visible
+  if (container.style.display === 'block') {
+    container.style.display = 'none';
+    return;
+  }
+
+  fetch(`http://localhost:3000/friends/requests/${currentUserID}`)
+    .then(res => res.json())
+    .then(data => {
+      container.innerHTML = '';
+      container.style.display = 'block';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No friend requests</p>';
+        return;
+      }
+
+      data.forEach(request => {
+        const div = document.createElement('div');
+        div.textContent = `From: ${request.senderName}`;
+
+        const acceptBtn = document.createElement('button');
+        acceptBtn.textContent = 'Accept';
+        acceptBtn.onclick = () => respondFriendRequest(request.sender_id, currentUserID, true);
+
+        const denyBtn = document.createElement('button');
+        denyBtn.textContent = 'Deny';
+        denyBtn.onclick = () => respondFriendRequest(request.sender_id, currentUserID, false);
+
+        div.appendChild(acceptBtn);
+        div.appendChild(denyBtn);
+
+        container.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error getting friend requests');
+    });
+}
+
+// Accept or deny a friend request
+function respondFriendRequest(senderID, receiverID, accept) {
+  const url = accept ? '/friends/accept' : '/friends/deny';
+
+  fetch(`http://localhost:3000${url}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sender_id: senderID, receiver_id: receiverID })
+  })
+    .then(res => res.text())
+    .then(data => {
+      alert(data);
+      getFriendRequests(); // refresh the list
+      getFriends(); // refresh friends list if accepted
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error responding to friend request');
+    });
+}
+
+  </script>
+</body>
+</html>

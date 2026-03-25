@@ -63,6 +63,55 @@ router.post('/request', (req, res) => {
 });
 
 
+// SEND FRIEND REQUEST BY USERNAME
+router.post('/request-by-username', (req, res) => {
+  const { currentUserID, friendUsername } = req.body;
+
+  if (!currentUserID || !friendUsername) {
+    return res.status(400).send("Missing data");
+  }
+
+  const findSql = 'SELECT userID FROM users WHERE userName = ?';
+
+  db.query(findSql, [friendUsername], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("DB error");
+    }
+
+    if (results.length === 0) {
+      return res.send("User not found");
+    }
+
+    const friendID = results[0].userID;
+
+    if (friendID === currentUserID) {
+      return res.send("You cannot add yourself");
+    }
+
+    const id = crypto.randomUUID();
+
+    const insertSql = `
+      INSERT INTO friendships (id, sender_id, receiver_id, status)
+      VALUES (?, ?, ?, 'pending')
+    `;
+
+    db.query(insertSql, [id, currentUserID, friendID], (err2) => {
+      if (err2) {
+        console.error(err2);
+
+        if (err2.code === 'ER_DUP_ENTRY') {
+          return res.send("Friend request already exists");
+        }
+
+        return res.status(500).send("Server error");
+      }
+
+      res.send("Friend request sent to " + friendUsername);
+    });
+  });
+});
+
 
 // ACCEPT FRIEND REQUEST
 router.post('/accept', (req, res) => {
@@ -89,8 +138,6 @@ router.post('/accept', (req, res) => {
   });
 });
 
-
-
 // DENY FRIEND REQUEST
 router.post('/deny', (req, res) => {
   const sender_id = req.body.sender_id;
@@ -116,6 +163,26 @@ router.post('/deny', (req, res) => {
   });
 });
 
+//  SHOWS INCOMING FRIEND REQUESTS
+router.get('/requests/:userid', (req, res) => {
+  const userId = req.params.userid;
+
+  const sql = `
+    SELECT f.sender_id, u.userName AS senderName
+    FROM friendships f
+    JOIN users u ON f.sender_id = u.userID
+    WHERE f.receiver_id = ? AND f.status = 'pending'
+  `;
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Server error');
+    }
+
+    res.json(results);
+  });
+});
 
 // GET FRIEND LIST
 router.get('/list/:userid', (req, res) => {
